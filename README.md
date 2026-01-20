@@ -21,6 +21,27 @@ What this project **does**:
 
 This project doesnt replicate accuratly the electrical environement, is it made first to display the architecture and structure needed in a similar realistic context.
 
+```mermaid
+flowchart TD
+  subgraph ISR["ISR context"]
+    A_ISR["(simulated) VIS Sensor"]
+    B_ISR["(simulated) UV Sensor"]
+  end
+
+  subgraph TH["Thread context"]
+    H["Shared Sensor Handler Task (bottom-half)"]
+    Q["Bounded Message Queue (fixed capacity)"]
+    P["Processing Task (consumes messages)"]
+    M["Monitoring Task (telemetry)"]
+  end
+
+  A_ISR -->|signal| H
+  B_ISR -->|signal| H
+  H -->|enqueue| Q
+  Q -->|dequeue| P
+  P -->|update stats| M
+```
+
 ## Execution Environment
 
 - **RTOS:** Zephyr RTOS  
