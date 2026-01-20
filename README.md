@@ -1,7 +1,5 @@
 # Banknote Sensor RTOS
 
-## Overview
-
 This project is a **real-time embedded application** implementing a simplified
 banknote authentication pipeline.
 
@@ -13,22 +11,15 @@ sensors are abstracted during development.
 The application is structured exactly as it would be for deployment on real
 hardware.
 
-## Scope and Intent
+## Scope
 
 What this project **does**:
-- Implements a real-time, multi-stage pipeline (acquisition → processing → decision)
+- Implements a real-time, multi-stage pipeline
 - Uses strict RTOS primitives: threads, priorities, timers, bounded queues
-- Enforces embedded constraints (fixed stacks, backpressure, timeouts)
+- Enforces embedded constraints
 - Simulates sensor inputs while keeping the application logic unchanged
-- Is suitable for continuous integration and deterministic testing
 
-What this project **does not claim**:
-- Electrical realism (ADC noise, DMA contention, bus timing)
-- Exact interrupt latency measurements
-- Power, clock, or hardware qualification
-
-This separation reflects standard embedded engineering practice:
-logic and scheduling are validated first, hardware effects later.
+This project doesnt replicate accuratly the electrical environement, is it made first to display the architecture and structure needed in a similar realistic context.
 
 ## Execution Environment
 
