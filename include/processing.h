@@ -4,7 +4,7 @@
 #include <zephyr/sys/atomic.h>
 
 /**
- * Counter of processed msgs
+ * Counter of successfully processed sample
  */
 extern atomic_t g_processed_count;
 

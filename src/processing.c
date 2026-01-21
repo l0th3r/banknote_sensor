@@ -7,7 +7,6 @@
 
 LOG_MODULE_REGISTER(processing, LOG_LEVEL_INF);
 
-/* processed elements counter */
 atomic_t g_processed_count;
 
 static void processing_task(void* a, void* b, void *c)

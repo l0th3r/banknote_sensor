@@ -1,5 +1,6 @@
 #include "monitoring.h"
 #include "processing.h"
+#include "sensor_handler.h"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
@@ -18,7 +19,11 @@ static void monitoring_task(void* a, void* b, void* c)
     while (1)
     {
         k_sleep(K_SECONDS(1));
-        LOG_INF("processed=%ld", (long)atomic_get(&g_processed_count));
+
+        LOG_INF("processed=%ld, samples dropped=%ld, sensor data packets dropped=%ld",
+            (long)atomic_get(&g_processed_count),
+            (long)atomic_get(&g_dropped_sample_count),
+            (long)atomic_get(&g_dropped_pck_count));
     }
 }
 

@@ -6,6 +6,9 @@
 
 LOG_MODULE_REGISTER(sensor_handler, LOG_LEVEL_INF);
 
+atomic_t g_dropped_pck_count;
+atomic_t g_dropped_sample_count;
+
 /**
  * Sensor data packet
  */
@@ -39,7 +42,7 @@ static void sensor_handler_task(void* a, void* b, void* c)
 
     while (1)
     {
-        /* wait of ISR evnt */
+        /* wait for sample packets q to be filled from ISR */
         k_msgq_get(&pck_q, &pck, K_FOREVER);
 
         msg.sensor =        pck.sensor;
@@ -50,7 +53,7 @@ static void sensor_handler_task(void* a, void* b, void* c)
         /* drop if queue full */
         if (k_msgq_put(&g_sample_q, &msg, K_NO_WAIT) != 0)
         {
-            LOG_WRN("Sample queue full, dropped seq %d.", msg.seq);
+            atomic_inc(&g_dropped_sample_count);
         }
     }
 }
@@ -70,10 +73,15 @@ void sensor_handler_notify(sensor_id_t sensor, sample_value_t value)
     };
 
     /* IMPORTANT to not block ISR calling this functionn */
-    k_msgq_put(&pck_q, &spck, K_NO_WAIT);
+    if (k_msgq_put(&pck_q, &spck, K_NO_WAIT) != 0)
+    {
+        atomic_inc(&g_dropped_pck_count);
+    }
 }
 
 void sensor_handler_init(void)
 {
     seq_counter = 0;
+    atomic_set(&g_dropped_pck_count, 0);
+    atomic_set(&g_dropped_sample_count, 0);
 }
