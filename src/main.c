@@ -1,6 +1,7 @@
 #include "processing.h"
 #include "monitoring.h"
 #include "sensor_handler.h"
+#include "sensor_sim.h"
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
@@ -21,6 +22,11 @@ int main(int argc, char** argv)
     LOG_INF("Sensor handler task running.");
 
     LOG_INF("Waiting for samples...");
+
+    sensors_sim_init();
+    LOG_INF("Sensor simulation ready.");
+    
+    sensors_sim_start();
 
     return 0;
 }
