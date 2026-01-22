@@ -31,5 +31,5 @@ K_THREAD_DEFINE(monitoring_tid, 1536, monitoring_task, NULL, NULL, NULL, 3, 0, 0
 
 void monitoring_init(void)
 {
-    /* TODO: Start monitoring */
+    /* TODO: init monitoring */
 }
