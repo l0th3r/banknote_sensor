@@ -20,7 +20,7 @@ static struct k_spinlock uv_buf_lock;
 
 /**
  * Simulate sensor storing data in hardware buffer
- * Returns 1 if data is dropped
+ * Returns 1 if data was not written
  */
 static int sensor_sample_emit(sensor_id_t id, const sample_value_t* raw)
 {
@@ -54,6 +54,8 @@ static int sensor_sample_emit(sensor_id_t id, const sample_value_t* raw)
         return 1;
     }
 
+    /* IRQ SIMULATION */
+    handler_isr(id);
     return 0;
 }
 

@@ -16,10 +16,16 @@ extern atomic_t g_dropped_pck_count;
 extern atomic_t g_dropped_sample_count;
 
 /**
- * Notify main handler that sensor sample is available
- * (functionis non blocking so safe to be called from ISR)
+ * Number of miscatch in simulated hardware memory.
+ * (When handler try to read in sensor memory but failed)
  */
-void sensor_handler_notify(sensor_id_t sensor, sample_value_t value);
+extern atomic_t g_failed_sensor_buf_read;
+
+/**
+ * Simulated ISR, non blocking function to simply signal that a sensor have
+ * some data available in it's simulated hardware buffer
+ */
+void handler_isr(sensor_id_t sensor);
 
 /**
  * Init sensor handler

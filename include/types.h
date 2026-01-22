@@ -26,7 +26,7 @@ typedef struct
 {
     sensor_id_t     sensor;
     uint32_t        seq;
-    int64_t         t_produced_ms;
+    int64_t         t_handled_ms;
     sample_value_t  value;
 } sample_msg_t;
 
