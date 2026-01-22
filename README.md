@@ -21,25 +21,41 @@ What this project **does**:
 
 This project doesnt replicate accuratly the electrical environement, is it made first to display the architecture and structure needed in a similar realistic context.
 
+### Project logic structure
 ```mermaid
+---
+title: Banknote Sensor Pipeline
+---
 flowchart TD
-  subgraph ISR["ISR context"]
-    A_ISR["(simulated) VIS Sensor"]
-    B_ISR["(simulated) UV Sensor"]
+  subgraph SIM["Hardware Simulation"]
+    subgraph TIM["Running on k_timer"]
+      VIS_SENSOR["VIS Sensor"]
+      UV_SENSOR["UV Sensor"]
+    end
+    VIS_SENSOR-- Filling on fixed interval -->VIS_SENSOR_BUF["VIS Sensor hardware memory"]
+    UV_SENSOR-- Filling on fixed interval -->UV_SENSOR_BUF["UV Sensor hardware memory"]
   end
+  VIS_SENSOR_BUF-- Simulate IRQ signal -->ISR
+  UV_SENSOR_BUF-- Simulate IRQ signal -->ISR
 
-  subgraph TH["Thread context"]
-    H["Shared Sensor Handler Task (bottom-half)"]
-    Q["Bounded Message Queue (fixed capacity)"]
-    P["Processing Task (consumes messages)"]
-    M["Monitoring Task (telemetry)"]
+ISR["ISR"]-- non blocking filling with just sensor id -->PCKQ["k_msgq of sensor id"]
+
+  subgraph THR["Thread Context"]
+    subgraph HND["Handler thread - priority 1"]
+      HANDLER["Handler task"]-- thread wait for k_msgq to have data -->PCKQ
+      HANDLER-- Retreive data from hardware memeory -->SENSOR_BUF["VIS or UV Sensor hardware memory"]
+      HANDLER-- Fill with timestamp data and sensor id -->SMPLQ["Sample queue"]
+    end
+    subgraph PROC["Process thread  - priority 2"]
+      PROCESSING["Processing Task"]-- thread wait for k_msgq to have data -->SMPLQ
+      PROCESSING-- handle samples and comes to a conclusion -->DECISION["SUCCESS | INCONCLUSIVE | FAIL"]
+    end
+    subgraph MON["Monitoring thread - priority 3"]
+      MONITORING["Monitoring task, every second gather all the atomic counters and print log"]
+      MONITORING-->HANDLER
+      MONITORING-->PROCESSING
+    end
   end
-
-  A_ISR -->|signal| H
-  B_ISR -->|signal| H
-  H -->|enqueue| Q
-  Q -->|dequeue| P
-  P -->|update stats| M
 ```
 
 ## Execution Environment
