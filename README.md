@@ -88,7 +88,6 @@ west init -m <repo-url>
 cd <workspace>
 west update
 west zephyr-export
-west sdk install
 ```
 
 Build:
