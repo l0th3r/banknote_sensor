@@ -9,5 +9,6 @@ target_sources(app PRIVATE
     src/processing.c
     src/monitoring.c
     src/sensor_handler.c
+    src/sensor_sim.c
 )
 target_include_directories(app PRIVATE include)

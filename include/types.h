@@ -6,17 +6,17 @@
 /**
  * Sensor sample value type
  * 
- * TODO: Change placeholder type to actual sensor data
+ * Note: matching real VIS and UV sensors sample data.
  */
-typedef int32_t sample_value_t;
+typedef uint16_t sample_value_t;
 
 /**
  * Sensor ID
  */
 typedef enum
 {
-    SENSOR_VIS = 0,
-    SENSOR_UV = 1
+    SENSOR_VIS = 1,
+    SENSOR_UV = 2
 } sensor_id_t;
 
 /**
@@ -26,7 +26,7 @@ typedef struct
 {
     sensor_id_t     sensor;
     uint32_t        seq;
-    int64_t         t_produced_ms;
+    int64_t         t_handled_ms;
     sample_value_t  value;
 } sample_msg_t;
 
